@@ -24,20 +24,26 @@ function Process-Files {
     $directory = $textboxDirectory.Text
     $searchStr = $textboxSearch.Text
     $replaceStr = $textboxReplace.Text
-    $extension = $textboxExtension.Text
+    $extension = $textboxExtension.Text.TrimStart('.') # Remove leading dot
     $ignoreExt = $checkboxIgnoreExt.Checked
 
     if (-not [string]::IsNullOrWhiteSpace($directory) -and -not [string]::IsNullOrWhiteSpace($searchStr) -and -not [string]::IsNullOrWhiteSpace($replaceStr)) {
-        Get-ChildItem -Path $directory -Recurse | ForEach-Object {
-            if (-not $ignoreExt -and $_.Extension -ne ".$extension") {
+        Get-ChildItem -Path $directory -Recurse -File | ForEach-Object {
+            if (-not $ignoreExt -and $_.Extension.ToLower() -ne ".$extension".ToLower()) {
                 return
             }
 
             try {
-                (Get-Content $_.FullName) -replace $searchStr, $replaceStr | Set-Content $_.FullName
+                $content = Get-Content $_.FullName -Raw
+                if ($content -match [regex]::Escape($searchStr)) {
+                    $content -replace [regex]::Escape($searchStr), $replaceStr | Set-Content $_.FullName
+                    Write-Host "Replaced in file: $($_.FullName)"
+                } else {
+                    Write-Host "No match in file: $($_.FullName)"
+                }
             }
             catch {
-                # Handle errors if necessary
+                Write-Host "Error processing file: $($_.FullName) - $_"
             }
         }
 
@@ -133,8 +139,8 @@ $form.Add_Shown({$form.Activate()})
 # SIG # Begin signature block
 # MIIFggYJKoZIhvcNAQcCoIIFczCCBW8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUGTcmPLLLW1vXzeurlfOcJNJK
-# KxOgggMWMIIDEjCCAfqgAwIBAgIQLOXnTOrsfbtMi7849WAAizANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU4AEtazY7QfRcc5IgWdM8hTgA
+# MSqgggMWMIIDEjCCAfqgAwIBAgIQLOXnTOrsfbtMi7849WAAizANBgkqhkiG9w0B
 # AQsFADAhMR8wHQYDVQQDDBZDSEVTSS1Db2RlU2lnbi1KRC0yMDI0MB4XDTIzMTEx
 # OTE5NDEzOVoXDTI0MTExOTIwMDEzOVowITEfMB0GA1UEAwwWQ0hFU0ktQ29kZVNp
 # Z24tSkQtMjAyNDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPLupOwP
@@ -154,11 +160,11 @@ $form.Add_Shown({$form.Activate()})
 # A1UEAwwWQ0hFU0ktQ29kZVNpZ24tSkQtMjAyNAIQLOXnTOrsfbtMi7849WAAizAJ
 # BgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0B
 # CQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAj
-# BgkqhkiG9w0BCQQxFgQUH2Q8S5xNL9YrMawEu9DP7a/W77wwDQYJKoZIhvcNAQEB
-# BQAEggEAzgCASqV/qFy5THi2mIssAUVs+5A0CYczIzmR+loUEVWTZ92x71Ve5NDP
-# yzgDS10qgBtnH29ulRJXzzq3kF8vpk2+xg93BdCFcQ9bTbDnESszb2v9Uf6ZpUlI
-# 6v0EcP1WF+YkQNPHIVsNitRPCUaRGtcUNbfCoqOOjGTvpRmUABt/j6iOYWaWa8Kc
-# rVRjkQ79HlZbTTojEiXov/m5VNkl4bay/FFxkMAxZSdxs1bg+crkf72Y1z0Kh1ew
-# PeeNFJvnh67/NXvoyKgg9/i5+7UGyXmEB8ZsPb5VhGkDO9ahxfeKBGk7GW3r6RCz
-# 0Idsrb7kpRcKbPVFNhROnyflG99cLQ==
+# BgkqhkiG9w0BCQQxFgQUUXde9+PLUNtrWv49zEwj7C1Kp/owDQYJKoZIhvcNAQEB
+# BQAEggEA798CQm7DGKKlaChhoBG70uzeUnJXJvgDNkjydEeHJj9vxtdFreK2nmUz
+# D3/BlQ+NnyicHaZjJhMb04x3/bQvjNe3cCFQzuh6D/Hwj7wHKnixjbQvg81jD/Po
+# DoPmyVcPPg5uRbTj38dJkIbfD7aWJ+QtU40NA+vgYJSO9+PsCoblmXtanjwhyJkW
+# 5HVjwLsW3EUjaNUTjBliekSv4L8ZBPK6Ezac9fcx+NgSm2i+3pQeIDu9+uRW6m/3
+# BdJ8+348Fmp+WVqnLQAxjQFiJIViwjX5OFxNPBj39H4tXAj6alJGy6N2At4/MFhl
+# 00rgNt4mc/7QPMM9IhsqLzgl4TngPQ==
 # SIG # End signature block
