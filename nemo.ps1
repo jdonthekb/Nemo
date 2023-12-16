@@ -24,12 +24,11 @@ function Process-Files {
     $directory = $textboxDirectory.Text
     $searchStr = $textboxSearch.Text
     $replaceStr = $textboxReplace.Text
-    $extension = $textboxExtension.Text.TrimStart('.') # Remove leading dot
-    $ignoreExt = $checkboxIgnoreExt.Checked
+    $extension = "." + $dropdownExtension.Text # Prepend period before using the extension
 
     if (-not [string]::IsNullOrWhiteSpace($directory) -and -not [string]::IsNullOrWhiteSpace($searchStr) -and -not [string]::IsNullOrWhiteSpace($replaceStr)) {
         Get-ChildItem -Path $directory -Recurse -File | ForEach-Object {
-            if (-not $ignoreExt -and $_.Extension.ToLower() -ne ".$extension".ToLower()) {
+            if ($_.Extension.ToLower() -ne ".$extension".ToLower()) {
                 return
             }
 
@@ -55,7 +54,7 @@ function Process-Files {
 
 # Main window
 $form = New-Object System.Windows.Forms.Form
-$form.Text = 'Nemo v1.1 by Joshua Dwight'
+$form.Text = 'Nemo v1.2 by Joshua Dwight'
 $form.Size = New-Object System.Drawing.Size($windowWidth, $windowHeight)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
@@ -105,24 +104,29 @@ $textboxReplace.Location = New-Object System.Drawing.Point(10,140)
 $textboxReplace.Size = New-Object System.Drawing.Size(470,20) # Increased width
 $form.Controls.Add($textboxReplace)
 
-# Extension input
+# File Extension dropdown
 $labelExtension = New-Object System.Windows.Forms.Label
 $labelExtension.Location = New-Object System.Drawing.Point(10,170)
 $labelExtension.Size = New-Object System.Drawing.Size(280,20)
 $labelExtension.Text = "File Extension:"
 $form.Controls.Add($labelExtension)
 
-$textboxExtension = New-Object System.Windows.Forms.TextBox
-$textboxExtension.Location = New-Object System.Drawing.Point(10,190)
-$textboxExtension.Size = New-Object System.Drawing.Size(470,20) # Increased width
-$form.Controls.Add($textboxExtension)
+$dropdownExtension = New-Object System.Windows.Forms.ComboBox
+$dropdownExtension.Location = New-Object System.Drawing.Point(10,190)
+$dropdownExtension.Size = New-Object System.Drawing.Size(150,40) # Further reduced width
+$dropdownExtension.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
 
-# Ignore extension checkbox
-$checkboxIgnoreExt = New-Object System.Windows.Forms.CheckBox
-$checkboxIgnoreExt.Location = New-Object System.Drawing.Point(10,220)
-$checkboxIgnoreExt.Size = New-Object System.Drawing.Size(280,20)
-$checkboxIgnoreExt.Text = "Ignore Extension"
-$form.Controls.Add($checkboxIgnoreExt)
+# Further increase font size
+$dropdownExtension.Font = New-Object System.Drawing.Font("Arial", 12) # Larger font size
+
+# Add file extensions to the dropdown without the leading period, sorted alphabetically
+$extensions = @('bat', 'c', 'cmd', 'cpp', 'cs', 'css', 'go', 'html', 'java', 'js', 'json', 'pl', 'php', 'ps1', 'py', 'rb', 'rs', 'sh', 'swift', 'ts', 'txt', 'vb', 'xml', 'yaml', 'yml')
+foreach ($ext in $extensions) {
+    $dropdownExtension.Items.Add($ext)
+}
+
+$form.Controls.Add($dropdownExtension)
+
 
 # Process button
 $buttonProcess = New-Object System.Windows.Forms.Button
