@@ -1,14 +1,15 @@
-# Nemo v1.1 - Search and Replace Tool
+# Nemo v1.2 - Search and Replace Tool
 
-Nemo v1.1 is a PowerShell script with a graphical user interface (GUI) designed for searching and replacing text within files of a specified extension in a selected directory. It offers a user-friendly way to perform bulk text replacements across multiple files.
+Nemo v1.2 is an enhanced PowerShell script with a graphical user interface (GUI) for searching and replacing text within files of specific programming and scripting file types in a selected directory. It provides a user-friendly and more efficient way to perform bulk text replacements across multiple files.
 
 ## Features
 
-- GUI for easy interaction.
+- User-friendly GUI for easy interaction.
 - Directory browsing to select the target folder.
 - Options to specify search and replace text.
-- Ability to choose a specific file extension or process all files.
+- Dropdown menu to choose from a list of common programming and scripting file extensions.
 - Real-time processing feedback.
+- Improved usability with keyboard navigation in dropdowns.
 
 ## Prerequisites
 
@@ -29,8 +30,7 @@ No installation is required. The script can be run directly in PowerShell.
    - **Select Directory**: Use the "Browse" button to choose the directory containing files you want to process.
    - **Search For**: Enter the text string you want to find in the files.
    - **Replace With**: Enter the replacement text.
-   - **File Extension**: Specify the file extension (e.g., 'txt', 'ps1'). Leave it blank and check "Ignore Extension" to process all files.
-   - **Ignore Extension**: Check this option if you want to process all files regardless of their extension.
+   - **File Extension**: Use the dropdown to select a specific file extension (e.g., 'py', 'txt'). 
    - Click "Process" to start the operation.
 
 3. **Output**:
@@ -40,7 +40,7 @@ No installation is required. The script can be run directly in PowerShell.
 ## Notes
 
 - Ensure that the directory and file types you are processing do not contain critical or non-editable files, as changes are irreversible.
-- The application is designed for plain text files. Binary files or documents with complex formatting (like Word or PDF files) are not recommended.
+- The application is optimized for plain text files. Binary files or documents with complex formatting (like Word or PDF files) are not recommended.
 - Always backup important files before performing bulk operations.
 
 ## Troubleshooting
@@ -58,8 +58,8 @@ This project is licensed under the GNU General Public License v3.0 - see the [GP
 
 ## Version
 
-- Nemo v1.1
+- Nemo v1.2
 
 ---
 
-This README should provide a comprehensive guide for users to understand, install, and use the Nemo v1.1 PowerShell tool. You can add it to your project repository or distribute it along with your script.
+This README provides a comprehensive guide for users to understand, install, and use the Nemo v1.2 PowerShell tool. You can add it to your project repository or distribute it along with your script.
